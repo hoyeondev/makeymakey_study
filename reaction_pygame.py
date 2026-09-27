@@ -34,9 +34,32 @@ GRAY = (150, 150, 150)
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("MakeyMakey 반응속도 게임")
-font_big = pygame.font.SysFont(None, 80)
-font_mid = pygame.font.SysFont(None, 40)
-font_small = pygame.font.SysFont(None, 28)
+
+# 한글 지원 폰트 찾기 (없으면 기본 폰트로 대체 -> 이 경우 한글이 깨질 수 있음)
+def find_korean_font():
+    candidates = [
+        "applegothic",      # macOS 기본 한글 폰트
+        "applesdgothicneo",
+        "malgungothic",     # Windows
+        "notosanscjkkr",
+        "nanumgothic",
+    ]
+    available = pygame.font.get_fonts()
+    for name in candidates:
+        if name in available:
+            return name
+    return None
+
+_korean_font = find_korean_font()
+
+def make_font(size):
+    if _korean_font:
+        return pygame.font.SysFont(_korean_font, size)
+    return pygame.font.SysFont(None, size)
+
+font_big = make_font(80)
+font_mid = make_font(40)
+font_small = make_font(28)
 clock = pygame.time.Clock()
 
 
